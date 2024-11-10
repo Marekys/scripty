@@ -27,11 +27,14 @@ javascript:
                 var tileWidthX = TWMap.tileSize[0];
                 var tileWidthY = TWMap.tileSize[1];
 
-                // Overwrite spawnSector function to highlight villages
+                // Ensure _spawnSector function exists before overwriting
                 if (typeof mapOverlay.mapHandler._spawnSector === 'function') {
-                    mapOverlay.mapHandler.spawnSector = function(data, sector) {
+                    // Store the original _spawnSector function
+                    var originalSpawnSector = mapOverlay.mapHandler._spawnSector;
+
+                    mapOverlay.mapHandler._spawnSector = function(data, sector) {
                         console.log("Spawning sector at coordinates:", sector.x, sector.y);
-                        mapOverlay.mapHandler._spawnSector(data, sector); // Call original sector loading
+                        originalSpawnSector.call(this, data, sector); // Call original sector loading
                         
                         // Iterate over all tiles in the sector
                         for (var x in data.tiles) {
@@ -40,8 +43,8 @@ javascript:
                                 y = parseInt(y, 10);
                                 var village = mapOverlay.villages[(data.x + x) * 1000 + (data.y + y)];
                                 if (village) {
-                                    var el = $('#mapOverlay_canvas_' + sector.x + '_' + sector.y);
-                                    if (!el.length) {
+                                    var el = document.getElementById('mapOverlay_canvas_' + sector.x + '_' + sector.y);
+                                    if (!el) {
                                         console.log("Creating new canvas for sector:", sector.x, sector.y);
                                         var canvas = document.createElement('canvas');
                                         canvas.style.position = 'absolute';
