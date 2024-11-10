@@ -136,7 +136,7 @@ javascript:
                                                 var remainingFields = seconds / unitSpeed[3];
                                         } else if (commandName.includes("hcav") || commandName.includes("heavy")) {
                                                 var remainingFields = seconds / unitSpeed[4];
-                                        } else if (commandName.includes("ram") || commandName.includes("cat")) {
+                                        } else if (commandName.includes("baranidlo") || commandName.includes("cat")) {
                                                 var remainingFields = seconds / unitSpeed[5];
                                         }else if (commandName.includes("noble") || commandName.includes("snob")) {
                                                 var remainingFields = seconds / unitSpeed[6];
@@ -230,7 +230,7 @@ javascript:
                                                 var sec = remaining * unitSpeed[3];
                                         } else if (commandName.includes("hcav") || commandName.includes("heavy")) {
                                                 var sec = remaining * unitSpeed[4];
-                                        } else if (commandName.includes("ram") || commandName.includes("cat")) {
+                                        } else if (commandName.includes("baranidlo") || commandName.includes("cat")) {
                                                 var sec = remaining * unitSpeed[5];
                                         }else if (commandName.includes("noble") || commandName.includes("snob")) {
                                                 var sec = remaining * unitSpeed[6];
