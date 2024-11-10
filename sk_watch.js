@@ -125,7 +125,7 @@ javascript:
                                                 commandName = $("#incomings_table").find("tr").eq(timesRun).find("td").eq(0).text().trim().toLowerCase();
                                         // convert arrival time to field (?)
                                        
-                                        //console.log(commandName);
+                                        console.log(commandName);
                                         if (commandName.includes("sword")) {
                                                 var remainingFields = seconds / unitSpeed[0];
                                         } else if (commandName.includes("axe") || commandName.includes("spear")) {
@@ -189,7 +189,7 @@ javascript:
                                                 }
                                                 // nothing in common (?)
                                         }
-                                        //console.log(intersectionPoints.length);
+                                        console.log(intersectionPoints.length);
                                         // if no common point
                                         if (intersectionPoints.length == 0) {
                                                 $("#incomings_table").find("tr").eq(timesRun).find("td").last().text("Undetectable").css({
