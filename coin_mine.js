@@ -1,8 +1,9 @@
+javascript:
 (function () {
     // Check if we're already on the "snob" screen, else navigate there
-    if (game_data.screen !== 'snob') {
-        console.log("Navigating to the 'snob' screen.");
-        window.location.href = "/game.php?screen=snob";
+    javascript: if (window.location.href.indexOf('screen=snob') < 0) {
+        //relocate
+        window.location.assign(game_data.link_base_pure + "snob");
     } else {
         console.log("Already on the 'snob' screen.");
         executeCoinMinting();
@@ -29,3 +30,5 @@
         }
     }
 })();
+
+
