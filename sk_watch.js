@@ -98,106 +98,101 @@ javascript:
                         })
                 }
                 var doStuff = function() {
-                        $.ajax({
-                                url: url,
-                                success: function() {
-                                        intersectionPoints = [];
-                                        block = [];
-                                        $("#incomings_table").find("tr").eq(timesRun).find("td").last().after("<td></td>");
-                                        var distance = Number($("#incomings_table").find("tr").eq(timesRun).find("td").eq(4).text().trim());
-                                        var destination = $("#incomings_table").find("tr").eq(timesRun).find("td").eq(1).text().match(/\d+\|\d+/)[0];
-                                        var origin = $("#incomings_table").find("tr").eq(timesRun).find("td").eq(2).text().match(/\d+\|\d+/)[0];
-                                        var hms = $("#incomings_table").find("tr").eq(timesRun).find("td").eq(6).text().split(':'),
-                                                seconds = (+hms[0]) * 3600 + (+hms[1]) * 60 + (+hms[2]),
-                                                commandName = $("#incomings_table").find("tr").eq(timesRun).find("td").eq(0).text().trim().toLowerCase();
-                                        var unitSpeed_index = get_unitSpeed_unit_index(commandName);
-                                        var remainingFields = seconds / unitSpeed[unitSpeed_index];
-                                        var target = String(destination).split("|");
-                                        var source = String(origin).split("|");
-                                        var divisor = Number(target[0]) - Number(source[0]);
-                                        if (divisor == 0) {
-                                                divisor = 1;
-                                        }
-                                        var m = (Number(target[1]) - Number(source[1])) / (divisor);
-                                        var n = (m * Number(target[0]) - Number(target[1])) / -1;
-                                        for (var i = 0; i < towerCoords.length; i++) {
-                                                var h = (String(towerCoords[i]).split("|"))[0];
-                                                var k = (String(towerCoords[i]).split("|"))[1];
-                                                var r = towerLevels[i];
-                                                findCircleLineIntersections(r, h, k, m, n);
-                                        }
+                        intersectionPoints = [];
+                        block = [];
+                        $("#incomings_table").find("tr").eq(timesRun).find("td").last().after("<td></td>");
+                        var distance = Number($("#incomings_table").find("tr").eq(timesRun).find("td").eq(4).text().trim());
+                        var destination = $("#incomings_table").find("tr").eq(timesRun).find("td").eq(1).text().match(/\d+\|\d+/)[0];
+                        var origin = $("#incomings_table").find("tr").eq(timesRun).find("td").eq(2).text().match(/\d+\|\d+/)[0];
+                        var hms = $("#incomings_table").find("tr").eq(timesRun).find("td").eq(6).text().split(':'),
+                                seconds = (+hms[0]) * 3600 + (+hms[1]) * 60 + (+hms[2]),
+                                commandName = $("#incomings_table").find("tr").eq(timesRun).find("td").eq(0).text().trim().toLowerCase();
+                        var unitSpeed_index = get_unitSpeed_unit_index(commandName);
+                        var remainingFields = seconds / unitSpeed[unitSpeed_index];
+                        var target = String(destination).split("|");
+                        var source = String(origin).split("|");
+                        var divisor = Number(target[0]) - Number(source[0]);
+                        if (divisor == 0) {
+                                divisor = 1;
+                        }
+                        var m = (Number(target[1]) - Number(source[1])) / (divisor);
+                        var n = (m * Number(target[0]) - Number(target[1])) / -1;
+                        for (var i = 0; i < towerCoords.length; i++) {
+                                var h = (String(towerCoords[i]).split("|"))[0];
+                                var k = (String(towerCoords[i]).split("|"))[1];
+                                var r = towerLevels[i];
+                                findCircleLineIntersections(r, h, k, m, n);
+                        }
 
-                                        function findCircleLineIntersections(r, h, k, m, n) {
-                                                var a = 1 + Math.pow(m, 2);
-                                                var b = -h * 2 + (m * (n - k)) * 2;
-                                                var c = Math.pow(h, 2) + Math.pow(n - k, 2) - Math.pow(r, 2);
-                                                var d = Math.pow(b, 2) - 4 * a * c;
-                                                if (d >= 0) {
-                                                        var intersections = [
-                                                                (-b + Math.sqrt(d)) / 2 / a,
-                                                                (-b - Math.sqrt(d)) / 2 / a
-                                                        ];
-                                                        if (d == 0) {
-                                                                intersectionPoints.push((Number(intersections[0])) + "|" + (Number(m * intersections[0] + n)));
-                                                        }
-                                                        intersectionPoints.push((Number(intersections[0])) + "|" + (Number(m * intersections[0] + n)));
-                                                        intersectionPoints.push((Number(intersections[1])) + "|" + (Number(m * intersections[1] + n)));
+                        function findCircleLineIntersections(r, h, k, m, n) {
+                                var a = 1 + Math.pow(m, 2);
+                                var b = -h * 2 + (m * (n - k)) * 2;
+                                var c = Math.pow(h, 2) + Math.pow(n - k, 2) - Math.pow(r, 2);
+                                var d = Math.pow(b, 2) - 4 * a * c;
+                                if (d >= 0) {
+                                        var intersections = [
+                                                (-b + Math.sqrt(d)) / 2 / a,
+                                                (-b - Math.sqrt(d)) / 2 / a
+                                        ];
+                                        if (d == 0) {
+                                                intersectionPoints.push((Number(intersections[0])) + "|" + (Number(m * intersections[0] + n)));
+                                        }
+                                        intersectionPoints.push((Number(intersections[0])) + "|" + (Number(m * intersections[0] + n)));
+                                        intersectionPoints.push((Number(intersections[1])) + "|" + (Number(m * intersections[1] + n)));
+                                }
+                        }
+                        if (intersectionPoints.length == 0) {
+                                $("#incomings_table").find("tr").eq(timesRun).find("td").last().text("Nedetekovateľné").css({
+                                        "font-weight": "bold",
+                                        "color": "red"
+                                });
+                                ++timesRun
+                                setTimeout(doStuff, 1);
+                        } else {
+                                for (var i = 0; i < intersectionPoints.length; i++) {
+                                        var intersections = intersectionPoints[i].split("|");
+                                        var originDistance = Math.sqrt((Math.pow((intersections[0] - source[0]), 2) + Math.pow((intersections[1] - source[1]), 2)));
+                                        block.push(originDistance);
+                                }
+                                idx = block.indexOf(Math.min.apply(null, block));
+                                var nearest = intersectionPoints[idx];
+                                var currentDistance = distance - remainingFields;
+                                var M = nearest.split("|");
+                                var remaining = Math.sqrt((Math.pow((M[0] - source[0]), 2) + Math.pow((M[1] - source[1]), 2))) - currentDistance;
+                                var sec = remaining * unitSpeed[unitSpeed_index];
+                                var myTimer;
+
+                                function clock(x) {
+                                        myTimer = setInterval(myClock, 1000);
+                                        function myClock() {
+                                                --sec
+                                                var seconds = Math.floor(sec % 60);
+                                                var minutes = Math.floor((sec / 60) % 60);
+                                                var hours = Math.floor((sec / (60 * 60)));
+                                                seconds = seconds < 10 ? "0" + seconds : seconds;
+                                                minutes = minutes < 10 ? "0" + minutes : minutes;
+                                                hours = hours < 10 ? "0" + hours : hours;
+                                                time = hours + ":" + minutes + ":" + seconds;
+                                                if (sec < 0) {
+                                                        var time = "Detekovaný";
+                                                        $("#incomings_table").find("tr").eq(x).find("td").last().text(time).css({
+                                                                "font-weight": "bold",
+                                                                "color": "green"
+                                                        });
+                                                } else {
+                                                        var time = hours + ":" + minutes + ":" + seconds;
+                                                        $("#incomings_table").find("tr").eq(x).find("td").last().text(time).css("font-weight", "bold");
+                                                }
+                                                if (sec == 0) {
+                                                        clearInterval(myTimer);
                                                 }
                                         }
-                                        if (intersectionPoints.length == 0) {
-                                                $("#incomings_table").find("tr").eq(timesRun).find("td").last().text("Nedetekovateľné").css({
-                                                        "font-weight": "bold",
-                                                        "color": "red"
-                                                });
-                                                ++timesRun
-                                                setTimeout(doStuff, 1);
-                                        } else {
-                                            for (var i = 0; i < intersectionPoints.length; i++) {
-                                                    var intersections = intersectionPoints[i].split("|");
-                                                    var originDistance = Math.sqrt((Math.pow((intersections[0] - source[0]), 2) + Math.pow((intersections[1] - source[1]), 2)));
-                                                    block.push(originDistance);
-                                            }
-                                            idx = block.indexOf(Math.min.apply(null, block));
-                                            var nearest = intersectionPoints[idx];
-                                            var currentDistance = distance - remainingFields;
-                                            var M = nearest.split("|");
-                                            var remaining = Math.sqrt((Math.pow((M[0] - source[0]), 2) + Math.pow((M[1] - source[1]), 2))) - currentDistance;
-                                            var sec = remaining * unitSpeed[unitSpeed_index];
-                                            var myTimer;
-
-                                            function clock(x) {
-                                                    myTimer = setInterval(myClock, 1000);
-                                                    function myClock() {
-                                                            --sec
-                                                            var seconds = Math.floor(sec % 60);
-                                                            var minutes = Math.floor((sec / 60) % 60);
-                                                            var hours = Math.floor((sec / (60 * 60)));
-                                                            seconds = seconds < 10 ? "0" + seconds : seconds;
-                                                            minutes = minutes < 10 ? "0" + minutes : minutes;
-                                                            hours = hours < 10 ? "0" + hours : hours;
-                                                            time = hours + ":" + minutes + ":" + seconds;
-                                                            if (sec < 0) {
-                                                                    var time = "Detekovaný";
-                                                                    $("#incomings_table").find("tr").eq(x).find("td").last().text(time).css({
-                                                                            "font-weight": "bold",
-                                                                            "color": "green"
-                                                                    });
-                                                            } else {
-                                                                    var time = hours + ":" + minutes + ":" + seconds;
-                                                                    $("#incomings_table").find("tr").eq(x).find("td").last().text(time).css("font-weight", "bold");
-                                                            }
-                                                            if (sec == 0) {
-                                                                    clearInterval(myTimer);
-                                                            }
-                                                    }
-                                            }
-                                            clock(timesRun);
-                                            if (++timesRun < rows + 1) {
-                                                    setTimeout(doStuff, 1);
-                                            }
-                                        }
-                                },
-                        })
+                                }
+                                clock(timesRun);
+                                if (++timesRun < rows + 1) {
+                                        setTimeout(doStuff, 1);
+                                }
+                        }
                 }
                 $.ajax({
                         url: first(),
