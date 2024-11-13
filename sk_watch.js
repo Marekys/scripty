@@ -151,49 +151,50 @@ javascript:
                                                 });
                                                 ++timesRun
                                                 setTimeout(doStuff, 1);
-                                        }
-                                        for (var i = 0; i < intersectionPoints.length; i++) {
-                                                var intersections = intersectionPoints[i].split("|");
-                                                var originDistance = Math.sqrt((Math.pow((intersections[0] - source[0]), 2) + Math.pow((intersections[1] - source[1]), 2)));
-                                                block.push(originDistance);
-                                        }
-                                        idx = block.indexOf(Math.min.apply(null, block));
-                                        var nearest = intersectionPoints[idx];
-                                        var currentDistance = distance - remainingFields;
-                                        var M = nearest.split("|");
-                                        var remaining = Math.sqrt((Math.pow((M[0] - source[0]), 2) + Math.pow((M[1] - source[1]), 2))) - currentDistance;
-                                        var sec = remaining * unitSpeed[unitSpeed_index];
-                                        var myTimer;
+                                        } else {
+                                            for (var i = 0; i < intersectionPoints.length; i++) {
+                                                    var intersections = intersectionPoints[i].split("|");
+                                                    var originDistance = Math.sqrt((Math.pow((intersections[0] - source[0]), 2) + Math.pow((intersections[1] - source[1]), 2)));
+                                                    block.push(originDistance);
+                                            }
+                                            idx = block.indexOf(Math.min.apply(null, block));
+                                            var nearest = intersectionPoints[idx];
+                                            var currentDistance = distance - remainingFields;
+                                            var M = nearest.split("|");
+                                            var remaining = Math.sqrt((Math.pow((M[0] - source[0]), 2) + Math.pow((M[1] - source[1]), 2))) - currentDistance;
+                                            var sec = remaining * unitSpeed[unitSpeed_index];
+                                            var myTimer;
 
-                                        function clock(x) {
-                                                myTimer = setInterval(myClock, 1000);
-                                                function myClock() {
-                                                        --sec
-                                                        var seconds = Math.floor(sec % 60);
-                                                        var minutes = Math.floor((sec / 60) % 60);
-                                                        var hours = Math.floor((sec / (60 * 60)));
-                                                        seconds = seconds < 10 ? "0" + seconds : seconds;
-                                                        minutes = minutes < 10 ? "0" + minutes : minutes;
-                                                        hours = hours < 10 ? "0" + hours : hours;
-                                                        time = hours + ":" + minutes + ":" + seconds;
-                                                        if (sec < 0) {
-                                                                var time = "Detekovaný";
-                                                                $("#incomings_table").find("tr").eq(x).find("td").last().text(time).css({
-                                                                        "font-weight": "bold",
-                                                                        "color": "green"
-                                                                });
-                                                        } else {
-                                                                var time = hours + ":" + minutes + ":" + seconds;
-                                                                $("#incomings_table").find("tr").eq(x).find("td").last().text(time).css("font-weight", "bold");
-                                                        }
-                                                        if (sec == 0) {
-                                                                clearInterval(myTimer);
-                                                        }
-                                                }
-                                        }
-                                        clock(timesRun);
-                                        if (++timesRun < rows + 1) {
-                                                setTimeout(doStuff, 1);
+                                            function clock(x) {
+                                                    myTimer = setInterval(myClock, 1000);
+                                                    function myClock() {
+                                                            --sec
+                                                            var seconds = Math.floor(sec % 60);
+                                                            var minutes = Math.floor((sec / 60) % 60);
+                                                            var hours = Math.floor((sec / (60 * 60)));
+                                                            seconds = seconds < 10 ? "0" + seconds : seconds;
+                                                            minutes = minutes < 10 ? "0" + minutes : minutes;
+                                                            hours = hours < 10 ? "0" + hours : hours;
+                                                            time = hours + ":" + minutes + ":" + seconds;
+                                                            if (sec < 0) {
+                                                                    var time = "Detekovaný";
+                                                                    $("#incomings_table").find("tr").eq(x).find("td").last().text(time).css({
+                                                                            "font-weight": "bold",
+                                                                            "color": "green"
+                                                                    });
+                                                            } else {
+                                                                    var time = hours + ":" + minutes + ":" + seconds;
+                                                                    $("#incomings_table").find("tr").eq(x).find("td").last().text(time).css("font-weight", "bold");
+                                                            }
+                                                            if (sec == 0) {
+                                                                    clearInterval(myTimer);
+                                                            }
+                                                    }
+                                            }
+                                            clock(timesRun);
+                                            if (++timesRun < rows + 1) {
+                                                    setTimeout(doStuff, 1);
+                                            }
                                         }
                                 },
                         })
