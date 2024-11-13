@@ -146,8 +146,6 @@ javascript:
                                         "font-weight": "bold",
                                         "color": "red"
                                 });
-                                ++timesRun
-                                setTimeout(doStuff, 1);
                         } else {
                                 for (var i = 0; i < intersectionPoints.length; i++) {
                                         var intersections = intersectionPoints[i].split("|");
@@ -189,9 +187,9 @@ javascript:
                                         }
                                 }
                                 clock(timesRun);
-                                if (++timesRun < rows + 1) {
-                                        setTimeout(doStuff, 1);
-                                }
+                        }
+                        if (++timesRun < rows + 1) {
+                                setTimeout(doStuff, 1);
                         }
                 }
                 $.ajax({
