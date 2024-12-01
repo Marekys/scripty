@@ -30,11 +30,11 @@ var scriptConfig = {
     },
     translations: {
         en_DK: {
-            'Nobles Resource Calculator': 'Kalkulacka na Vypocet Slachticov',
+            'Nobles Resource Calculator': 'Vypocet Surovin pre Slachticov',
             Help: 'Help',
             'Redirecting...': 'Redirecting...',
             'Enter the nobleman amount for the which you want to calculate resources':
-                'Zadaj pocet slachticov pre ktory chces vypocitat zdroje',
+                'Zadaj pocet slachticov pre ktory chces vypocitat pocet surovin',
             'Calculate Resources': 'Vypocitaj Suroviny',
             Coins: 'Mince',
             Nobles: 'Slachtici',
@@ -49,6 +49,8 @@ var scriptConfig = {
                 'Hodnota zlavnenej mince musi byt medzi 0 a 48',
             'Enter the number of coins you already have':
                 'Zadaj pocet minci ktore uz su vyrazene',
+            'Use custom coin value': 'Pouzi nenahodenu hodnotu mince',
+            'Decret on?': 'Slachticky Dekret zapnuty?'
         },
     },
     allowedMarkets: [],
@@ -101,8 +103,19 @@ $.getScript(
                 e.preventDefault();
 
                 const noblesAmount = parseInt(jQuery('#raNoblesAmount').val());
-                const customCoinSale = parseFloat(jQuery('#raCustomCoinSale').val());
+                let customCoinSale = parseFloat(jQuery('#raCustomCoinSale').val()) || 0;
                 const hisCoins = parseInt(jQuery('#raHisCoins').val()) || 0;
+
+                const useCustomCoinSale = jQuery('#raUseCustomCoinSale').is(':checked');
+                const decretOn = jQuery('#raDecretOn').is(':checked');
+
+                if (!useCustomCoinSale) {
+                    customCoinSale = 0;
+                }
+
+                if (decretOn) {
+                    customCoinSale += 10;
+                }
 
                 if (isNaN(noblesAmount) || noblesAmount <= 0) {
                     UI.ErrorMessage(twSDK.tt('Invalid nobles amount!'));
@@ -150,7 +163,7 @@ $.getScript(
             });
         }
 
-        // Update the prepareContent function to include the new input field
+        // Update the prepareContent function to include the new input fields and checkboxes
         function prepareContent(noblesAmount, nobleCost, coinCost) {
             const coinsNeeded = twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
 
@@ -179,6 +192,18 @@ $.getScript(
                                 ${twSDK.tt('Enter custom coin sale value (0-48)')}
                             </label>
                             <input class="ra-input" id="raCustomCoinSale" type="number" value="0" min="0" max="48">
+                        </div>
+                        <div class="ra-mb15">
+                            <label for="raUseCustomCoinSale">
+                                ${twSDK.tt('Use custom coin value')}
+                            </label>
+                            <input type="checkbox" id="raUseCustomCoinSale">
+                        </div>
+                        <div class="ra-mb15">
+                            <label for="raDecretOn">
+                                ${twSDK.tt('Decret on?')}
+                            </label>
+                            <input type="checkbox" id="raDecretOn">
                         </div>
                         <div class="ra-mb15">
                             <label for="raHisCoins">
