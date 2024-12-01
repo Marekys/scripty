@@ -49,7 +49,7 @@ var scriptConfig = {
                 'Hodnota zlavnenej mince musi byt medzi 0 a 48',
             'Enter the number of coins you already have':
                 'Zadaj pocet minci ktore uz su vyrazene',
-            'Use custom coin value': 'Pouzi nenahodenu hodnotu mince',
+            'Use custom coin value': 'Pouzit vlastnu zlavu mince?',
             'Decret on?': 'Slachticky Dekret zapnuty?'
         },
     },
@@ -188,10 +188,10 @@ $.getScript(
                             <input class="ra-input" id="raNoblesAmount" type="text" value="${noblesAmount}">
                         </div>
                         <div class="ra-mb15">
-                            <label for="raCustomCoinSale">
-                                ${twSDK.tt('Enter custom coin sale value (0-48)')}
+                            <label for="raHisCoins">
+                                ${twSDK.tt('Enter the number of coins you already have')}
                             </label>
-                            <input class="ra-input" id="raCustomCoinSale" type="number" value="0" min="0" max="48">
+                            <input class="ra-input" id="raHisCoins" type="number" value="0" min="0">
                         </div>
                         <div class="ra-mb15">
                             <label for="raUseCustomCoinSale">
@@ -200,17 +200,18 @@ $.getScript(
                             <input type="checkbox" id="raUseCustomCoinSale">
                         </div>
                         <div class="ra-mb15">
+                            <label for="raCustomCoinSale">
+                                ${twSDK.tt('Enter custom coin % sale value (0-48)')}
+                            </label>
+                            <input class="ra-input" id="raCustomCoinSale" type="number" value="0" min="0" max="48">
+                        </div>
+                        <div class="ra-mb15">
                             <label for="raDecretOn">
                                 ${twSDK.tt('Decret on?')}
                             </label>
                             <input type="checkbox" id="raDecretOn">
                         </div>
-                        <div class="ra-mb15">
-                            <label for="raHisCoins">
-                                ${twSDK.tt('Enter the number of coins you already have')}
-                            </label>
-                            <input class="ra-input" id="raHisCoins" type="number" value="0" min="0">
-                        </div>
+
                         <a class="btn" href="javascript:void(0)" id="raCalculateResourcesBtn">
                             ${twSDK.tt('Calculate Resources')}
                         </a>
