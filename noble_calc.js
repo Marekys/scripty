@@ -43,10 +43,12 @@ var scriptConfig = {
             Iron: 'Zelezo',
             TOTAL: 'TOTAL',
             'Invalid nobles amount!': 'Nevalidny pocet slachticov!',
-            'Enter custom coin sale value (0-25)':
-                'Zadaj vlastnu hodnotu predaja minci (0-25)',
-            'Custom coin sale value must be between 0 and 25':
-                'Hodnota zlavnenej mince musi byt medzi 0 a 25',
+            'Enter custom coin % sale value (0-48)':
+                'Zadaj vlastnu hodnotu zlacnenia mince (0-48)',
+            'Custom coin sale value must be between 0 and 48':
+                'Hodnota zlavnenej mince musi byt medzi 0 a 48',
+            'Enter the number of coins you already have':
+                'Zadaj pocet minci ktore uz su vyrazene',
         },
     },
     allowedMarkets: [],
@@ -107,8 +109,8 @@ $.getScript(
                     return;
                 }
 
-                if (isNaN(customCoinSale) || customCoinSale < 10 || customCoinSale > 25) {
-                    UI.ErrorMessage(twSDK.tt('Custom coin sale value must be between 10 and 25'));
+                if (isNaN(customCoinSale) || customCoinSale < 0 || customCoinSale > 48) {
+                    UI.ErrorMessage(twSDK.tt('Custom coin sale value must be between 0 and 48'));
                     return;
                 }
 
@@ -174,9 +176,9 @@ $.getScript(
                         </div>
                         <div class="ra-mb15">
                             <label for="raCustomCoinSale">
-                                ${twSDK.tt('Enter custom coin sale value (0-25)')}
+                                ${twSDK.tt('Enter custom coin sale value (0-48)')}
                             </label>
-                            <input class="ra-input" id="raCustomCoinSale" type="number" value="0" min="0" max="25">
+                            <input class="ra-input" id="raCustomCoinSale" type="number" value="0" min="0" max="48">
                         </div>
                         <div class="ra-mb15">
                             <label for="raHisCoins">
