@@ -129,7 +129,7 @@ $.getScript(
                 jQuery('#raCoinsAmount').text(
                     twSDK.formatAsNumber(coinsNeeded)
                 );
-
+                
                 jQuery('#raWoodNeededCoins').text(
                     twSDK.formatAsNumber(woodNeededCoins)
                 );
@@ -183,9 +183,9 @@ $.getScript(
                         </div>
                         <div class="ra-mb15">
                             <label for="raCustomCoinSale">
-                                ${twSDK.tt('Enter custom coin sale value (10-25)')}
+                                ${twSDK.tt('Enter custom coin sale value (0-25)')}
                             </label>
-                            <input class="ra-input" id="raCustomCoinSale" type="number" value="10" min="10" max="25">
+                            <input class="ra-input" id="raCustomCoinSale" type="number" value="0" min="0" max="25">
                         </div>
                         <a class="btn" href="javascript:void(0)" id="raCalculateResourcesBtn">
                             ${twSDK.tt('Calculate Resources')}
