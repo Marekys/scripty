@@ -30,19 +30,19 @@ var scriptConfig = {
     },
     translations: {
         en_DK: {
-            'Nobles Resource Calculator': 'Nobles Resource Calculator',
+            'Nobles Resource Calculator': 'Kalkulacka na Vypocet Slachticov',
             Help: 'Help',
             'Redirecting...': 'Redirecting...',
             'Enter the nobleman amount for the which you want to calculate resources':
-                'Enter the nobleman amount for the which you want to calculate resources',
-            'Calculate Resources': 'Calculate Resources',
-            Coins: 'Coins',
-            Nobles: 'Nobles',
-            Wood: 'Wood',
-            Clay: 'Clay',
-            Iron: 'Iron',
+                'Zadaj pocet slachticov pre ktory chces vypocitat zdroje',
+            'Calculate Resources': 'Vypocitaj Suroviny',
+            Coins: 'Mince',
+            Nobles: 'Slachtici',
+            Wood: 'Drevo',
+            Clay: 'Hlina',
+            Iron: 'Zelezo',
             TOTAL: 'TOTAL',
-            'Invalid nobles amount!': 'Invalid nobles amount!',
+            'Invalid nobles amount!': 'Nevalidny pocet slachticov!',
         },
     },
     allowedMarkets: [],
@@ -65,6 +65,7 @@ $.getScript(
 
             const nobleCost = BuildingSnob.Modes.train.next_snob;
             const coinCost = BuildingSnob.Modes.train.storage_item;
+            const customCoinSale = 10;
 
             const content = prepareContent(noblesAmount, nobleCost, coinCost);
 
@@ -94,9 +95,15 @@ $.getScript(
                 e.preventDefault();
 
                 const noblesAmount = parseInt(jQuery('#raNoblesAmount').val());
+                const customCoinSale = parseInt(jQuery('#raCustomCoinSale').val());
 
                 if (noblesAmount <= 0) {
                     UI.ErrorMessage(twSDK.tt('Invalid nobles amount!'));
+                    return;
+                }
+
+                if (customCoinSale < 10 || customCoinSale > 25) {
+                    alert('Custom coin sale value must be between 10 and 25');
                     return;
                 }
 
@@ -240,6 +247,12 @@ $.getScript(
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="ra-mb15">
+                    <label for="raCustomCoinSale">
+                        ${twSDK.tt('Enter custom coin sale value (10-25)')}
+                    </label>
+                    <input class="ra-input" id="raCustomCoinSale" type="number" value="10" min="10" max="25">
                 </div>
             `;
         }
