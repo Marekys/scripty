@@ -99,23 +99,28 @@ $.getScript(
                 e.preventDefault();
 
                 const noblesAmount = parseInt(jQuery('#raNoblesAmount').val());
-                const customCoinSale = parseInt(jQuery('#raCustomCoinSale').val());
+                const customCoinSale = parseFloat(jQuery('#raCustomCoinSale').val());
 
-                if (noblesAmount <= 0) {
+                if (isNaN(noblesAmount) || noblesAmount <= 0) {
                     UI.ErrorMessage(twSDK.tt('Invalid nobles amount!'));
                     return;
                 }
 
-                if (customCoinSale < 0 || customCoinSale > 25) {
-                    UI.ErrorMessage(twSDK.tt('Custom coin sale value must be between 0 and 25'));
+                if (isNaN(customCoinSale) || customCoinSale < 10 || customCoinSale > 25) {
+                    UI.ErrorMessage(twSDK.tt('Custom coin sale value must be between 10 and 25'));
                     return;
                 }
 
-                const coinsNeeded =
-                    twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
+                const adjustedCoinCost = {
+                    wood: coinCost.wood * (1 - customCoinSale / 100),
+                    stone: coinCost.stone * (1 - customCoinSale / 100),
+                    iron: coinCost.iron * (1 - customCoinSale / 100)
+                };
+
+                const coinsNeeded = twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
 
                 const { woodNeededCoins, stoneNeededCoins, ironNeededCoins } =
-                    calculateResourcesForCoins(coinsNeeded, coinCost * (1 - customCoinSale / 100));
+                    calculateResourcesForCoins(coinsNeeded, adjustedCoinCost);
                 const {
                     woodNeededNobles,
                     stoneNeededNobles,
@@ -126,29 +131,14 @@ $.getScript(
                 const totalStone = stoneNeededCoins + stoneNeededNobles;
                 const totalIron = ironNeededCoins + ironNeededNobles;
 
-                jQuery('#raCoinsAmount').text(
-                    twSDK.formatAsNumber(coinsNeeded)
-                );
-                
-                jQuery('#raWoodNeededCoins').text(
-                    twSDK.formatAsNumber(woodNeededCoins)
-                );
-                jQuery('#raStoneNeededCoins').text(
-                    twSDK.formatAsNumber(stoneNeededCoins)
-                );
-                jQuery('#raIronNeededCoins').text(
-                    twSDK.formatAsNumber(ironNeededCoins)
-                );
+                jQuery('#raCoinsAmount').text(twSDK.formatAsNumber(coinsNeeded));
+                jQuery('#raWoodNeededCoins').text(twSDK.formatAsNumber(woodNeededCoins));
+                jQuery('#raStoneNeededCoins').text(twSDK.formatAsNumber(stoneNeededCoins));
+                jQuery('#raIronNeededCoins').text(twSDK.formatAsNumber(ironNeededCoins));
 
-                jQuery('#raWoodNeededNobles').text(
-                    twSDK.formatAsNumber(woodNeededNobles)
-                );
-                jQuery('#raStoneNeededNobles').text(
-                    twSDK.formatAsNumber(stoneNeededNobles)
-                );
-                jQuery('#raIronNeededNobles').text(
-                    twSDK.formatAsNumber(ironNeededNobles)
-                );
+                jQuery('#raWoodNeededNobles').text(twSDK.formatAsNumber(woodNeededNobles));
+                jQuery('#raStoneNeededNobles').text(twSDK.formatAsNumber(stoneNeededNobles));
+                jQuery('#raIronNeededNobles').text(twSDK.formatAsNumber(ironNeededNobles));
 
                 jQuery('#raTotalWood').text(twSDK.formatAsNumber(totalWood));
                 jQuery('#raToolStone').text(twSDK.formatAsNumber(totalStone));
@@ -171,7 +161,7 @@ $.getScript(
             const totalIron = ironNeededCoins + ironNeededNobles;
 
             return `
-                <div class="ra-grid">	
+                <div class="ra-grid">    
                     <div>
                         <div class="ra-mb15">
                             <label for="raNoblesAmount">
@@ -183,9 +173,9 @@ $.getScript(
                         </div>
                         <div class="ra-mb15">
                             <label for="raCustomCoinSale">
-                                ${twSDK.tt('Enter custom coin sale value (0-25)')}
+                                ${twSDK.tt('Enter custom coin sale value (10-25)')}
                             </label>
-                            <input class="ra-input" id="raCustomCoinSale" type="number" value="0" min="0" max="25">
+                            <input class="ra-input" id="raCustomCoinSale" type="number" value="10" min="10" max="25">
                         </div>
                         <a class="btn" href="javascript:void(0)" id="raCalculateResourcesBtn">
                             ${twSDK.tt('Calculate Resources')}
