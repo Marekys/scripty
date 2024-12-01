@@ -1,3 +1,19 @@
+/*
+ * Script Name: Nobles Resource Calculator
+ * Version: v1.0
+ * Last Updated: 2021-08-05
+ * Author: RedAlert
+ * Author URL: https://twscripts.dev/
+ * Author Contact: redalert_tw (Discord)
+ * Approved: N/A
+ * Approved Date: 2021-08-28
+ * Mod: JawJaw
+ */
+
+/*--------------------------------------------------------------------------------------
+ * This script can NOT be cloned and modified without permission from the script author.
+ --------------------------------------------------------------------------------------*/
+
 // User Input
 if (typeof DEBUG !== 'boolean') DEBUG = false;
 
@@ -5,10 +21,12 @@ if (typeof DEBUG !== 'boolean') DEBUG = false;
 var scriptConfig = {
     scriptData: {
         prefix: 'nobleCalculator',
-        name: 'Nobles Resource Calculator2.0',
-        version: 'v2.0',
-        author: 'Mareky',
+        name: 'Nobles Resource Calculator',
+        version: 'v1.0',
+        author: 'RedAlert',
         authorUrl: 'https://twscripts.dev/',
+        helpLink:
+            'https://forum.tribalwars.net/index.php?threads/nobles-resources-calculator.287583/',
     },
     translations: {
         en_DK: {
@@ -17,7 +35,6 @@ var scriptConfig = {
             'Redirecting...': 'Redirecting...',
             'Enter the nobleman amount for the which you want to calculate resources':
                 'Enter the nobleman amount for the which you want to calculate resources',
-            'Enter the coin price (10-25)': 'Enter the coin price (10-25)',
             'Calculate Resources': 'Calculate Resources',
             Coins: 'Coins',
             Nobles: 'Nobles',
@@ -26,7 +43,6 @@ var scriptConfig = {
             Iron: 'Iron',
             TOTAL: 'TOTAL',
             'Invalid nobles amount!': 'Invalid nobles amount!',
-            'Invalid coin price!': 'Invalid coin price!',
         },
     },
     allowedMarkets: [],
@@ -46,12 +62,11 @@ $.getScript(
 
         if (isValidScreen) {
             const noblesAmount = 4; // default nobles amount
-            const coinPrice = 23; // default coin price
 
             const nobleCost = BuildingSnob.Modes.train.next_snob;
             const coinCost = BuildingSnob.Modes.train.storage_item;
 
-            const content = prepareContent(noblesAmount, coinPrice, nobleCost, coinCost);
+            const content = prepareContent(noblesAmount, nobleCost, coinCost);
 
             const customStyle = `
                 .ra-grid { display: grid; grid-template-columns: 1fr 3fr; grid-gap: 15px; }
@@ -79,19 +94,14 @@ $.getScript(
                 e.preventDefault();
 
                 const noblesAmount = parseInt(jQuery('#raNoblesAmount').val());
-                const coinPrice = parseInt(jQuery('#raCoinPrice').val());
 
                 if (noblesAmount <= 0) {
                     UI.ErrorMessage(twSDK.tt('Invalid nobles amount!'));
                     return;
                 }
 
-                if (coinPrice < 10 || coinPrice > 25) {
-                    UI.ErrorMessage(twSDK.tt('Invalid coin price!'));
-                    return;
-                }
-
-                const coinsNeeded = twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
+                const coinsNeeded =
+                    twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
 
                 const { woodNeededCoins, stoneNeededCoins, ironNeededCoins } =
                     calculateResourcesForCoins(coinsNeeded, coinCost);
@@ -101,42 +111,32 @@ $.getScript(
                     ironNeededNobles,
                 } = calculateResourcesForNobles(noblesAmount, nobleCost);
 
-                const customCoinSale = 1;
-
-                const adjustedWoodNeededCoins = woodNeededCoins * customCoinSale;
-                const adjustedStoneNeededCoins = stoneNeededCoins * customCoinSale;
-                const adjustedIronNeededCoins = ironNeededCoins * customCoinSale;
-
-                const adjustedWoodNeededNobles = woodNeededNobles * customCoinSale;
-                const adjustedStoneNeededNobles = stoneNeededNobles * customCoinSale;
-                const adjustedIronNeededNobles = ironNeededNobles * customCoinSale;
-
-                const totalWood = adjustedWoodNeededCoins + adjustedWoodNeededNobles;
-                const totalStone = adjustedStoneNeededCoins + adjustedStoneNeededNobles;
-                const totalIron = adjustedIronNeededCoins + adjustedIronNeededNobles;
+                const totalWood = woodNeededCoins + woodNeededNobles;
+                const totalStone = stoneNeededCoins + stoneNeededNobles;
+                const totalIron = ironNeededCoins + ironNeededNobles;
 
                 jQuery('#raCoinsAmount').text(
                     twSDK.formatAsNumber(coinsNeeded)
                 );
 
                 jQuery('#raWoodNeededCoins').text(
-                    twSDK.formatAsNumber(adjustedWoodNeededCoins)
+                    twSDK.formatAsNumber(woodNeededCoins)
                 );
                 jQuery('#raStoneNeededCoins').text(
-                    twSDK.formatAsNumber(adjustedStoneNeededCoins)
+                    twSDK.formatAsNumber(stoneNeededCoins)
                 );
                 jQuery('#raIronNeededCoins').text(
-                    twSDK.formatAsNumber(adjustedIronNeededCoins)
+                    twSDK.formatAsNumber(ironNeededCoins)
                 );
 
                 jQuery('#raWoodNeededNobles').text(
-                    twSDK.formatAsNumber(adjustedWoodNeededNobles)
+                    twSDK.formatAsNumber(woodNeededNobles)
                 );
                 jQuery('#raStoneNeededNobles').text(
-                    twSDK.formatAsNumber(adjustedStoneNeededNobles)
+                    twSDK.formatAsNumber(stoneNeededNobles)
                 );
                 jQuery('#raIronNeededNobles').text(
-                    twSDK.formatAsNumber(adjustedIronNeededNobles)
+                    twSDK.formatAsNumber(ironNeededNobles)
                 );
 
                 jQuery('#raTotalWood').text(twSDK.formatAsNumber(totalWood));
@@ -146,30 +146,21 @@ $.getScript(
         }
 
         // Helper: Prepare content
-        function prepareContent(noblesAmount, coinPrice, nobleCost, coinCost) {
-            const coinsNeeded = twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
+        function prepareContent(noblesAmount, nobleCost, coinCost) {
+            const coinsNeeded =
+                twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
 
             const { woodNeededCoins, stoneNeededCoins, ironNeededCoins } =
                 calculateResourcesForCoins(coinsNeeded, coinCost);
             const { woodNeededNobles, stoneNeededNobles, ironNeededNobles } =
                 calculateResourcesForNobles(noblesAmount, nobleCost);
 
-            const customCoinSale = 1;
-
-            const adjustedWoodNeededCoins = woodNeededCoins * customCoinSale;
-            const adjustedStoneNeededCoins = stoneNeededCoins * customCoinSale;
-            const adjustedIronNeededCoins = ironNeededCoins * customCoinSale;
-
-            const adjustedWoodNeededNobles = woodNeededNobles * customCoinSale;
-            const adjustedStoneNeededNobles = stoneNeededNobles * customCoinSale;
-            const adjustedIronNeededNobles = ironNeededNobles * customCoinSale;
-
-            const totalWood = adjustedWoodNeededCoins + adjustedWoodNeededNobles;
-            const totalStone = adjustedStoneNeededCoins + adjustedStoneNeededNobles;
-            const totalIron = adjustedIronNeededCoins + adjustedIronNeededNobles;
+            const totalWood = woodNeededCoins + woodNeededNobles;
+            const totalStone = stoneNeededCoins + stoneNeededNobles;
+            const totalIron = ironNeededCoins + ironNeededNobles;
 
             return `
-                <div class="ra-grid">    
+                <div class="ra-grid">	
                     <div>
                         <div class="ra-mb15">
                             <label for="raNoblesAmount">
@@ -179,16 +170,10 @@ $.getScript(
                             </label>
                             <input class="ra-input" id="raNoblesAmount" type="text" value="${noblesAmount}">
                         </div>
-                        <div class="ra-mb15">
-                            <label for="raCoinPrice">
-                                ${twSDK.tt('Enter the coin price (10-25)')}
-                            </label>
-                            <input class="ra-input" id="raCoinPrice" type="text" value="${coinPrice}">
-                        </div>
                         <a class="btn" href="javascript:void(0)" id="raCalculateResourcesBtn">
                             ${twSDK.tt('Calculate Resources')}
                         </a>
-                    </div>    
+                    </div>	
                     <div>
                         <table class="ra-table ra-table-v2" width="100%">
                             <thead>
@@ -215,13 +200,13 @@ $.getScript(
             )}</span></b>
                                     </td>
                                     <td id="raWoodNeededCoins">${twSDK.formatAsNumber(
-                                        adjustedWoodNeededCoins
+                                        woodNeededCoins
                                     )}</td>
                                     <td id="raStoneNeededCoins">${twSDK.formatAsNumber(
-                                        adjustedStoneNeededCoins
+                                        stoneNeededCoins
                                     )}</td>
                                     <td id="raIronNeededCoins">${twSDK.formatAsNumber(
-                                        adjustedIronNeededCoins
+                                        ironNeededCoins
                                     )}</td>
                                 </tr>
                                 <tr>
@@ -229,13 +214,13 @@ $.getScript(
                                         <b>${twSDK.tt('Nobles')}</b>
                                     </td>
                                     <td id="raWoodNeededNobles">${twSDK.formatAsNumber(
-                                        adjustedWoodNeededNobles
+                                        woodNeededNobles
                                     )}</td>
                                     <td id="raStoneNeededNobles">${twSDK.formatAsNumber(
-                                        adjustedStoneNeededNobles
+                                        stoneNeededNobles
                                     )}</td>
                                     <td id="raIronNeededNobles">${twSDK.formatAsNumber(
-                                        adjustedIronNeededNobles
+                                        ironNeededNobles
                                     )}</td>
                                 </tr>
                                 <tr>
