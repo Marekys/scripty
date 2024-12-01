@@ -37,7 +37,7 @@ var scriptConfig = {
 };
 
 $.getScript(
-    `https://marekys.github.io/scripty/noble_calc.js?url=${document.currentScript.src}`,
+    `https://twscripts.dev/scripts/twSDK.js?url=${document.currentScript.src}`,
     async function () {
         // Initialize Library
         await twSDK.init(scriptConfig);
@@ -101,7 +101,7 @@ $.getScript(
                     ironNeededNobles,
                 } = calculateResourcesForNobles(noblesAmount, nobleCost);
 
-                customCoinSale = (100 - coinPrice) / 100;
+                customCoinSale = 1;
 
                 const adjustedWoodNeededCoins = woodNeededCoins * customCoinSale;
                 const adjustedStoneNeededCoins = stoneNeededCoins * customCoinSale;
