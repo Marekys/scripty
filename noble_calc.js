@@ -49,8 +49,8 @@ var scriptConfig = {
                 'Hodnota zlavnenej mince musi byt medzi 0 a 48',
             'Enter the number of coins you already have':
                 'Zadaj pocet minci ktore uz su vyrazene',
-            'Use custom coin value': 'Pouzit vlastnu zlavu mince?',
-            'Decret on?': 'Slachticky Dekret zapnuty?'
+            'Use custom coin value': 'Pouzit vlastnu cenu mince? (Inak bude pouzita aktualna cena)',
+            'Decret on?': 'Slachticky Dekret zapnuty -10%?'
         },
     },
     allowedMarkets: [],
@@ -103,7 +103,7 @@ $.getScript(
                 e.preventDefault();
 
                 const noblesAmount = parseInt(jQuery('#raNoblesAmount').val());
-                let customCoinSale = parseFloat(jQuery('#raCustomCoinSale').val()) || 0;
+                let customCoinSale = parseInt(jQuery('#raCustomCoinSale').val()) || 0;
                 const hisCoins = parseInt(jQuery('#raHisCoins').val()) || 0;
 
                 const useCustomCoinSale = jQuery('#raUseCustomCoinSale').is(':checked');
@@ -133,6 +133,14 @@ $.getScript(
                     iron: coinCost.iron * (1 - customCoinSale / 100)
                 };
 
+                        // Calculate the number of nobles the player can recruit with their existing coins
+                let noblesAlreadyRecruited = 0;
+                while (twSDK.calculateCoinsNeededForNthNoble(noblesAlreadyRecruited + 1) <= hisCoins) {
+                    noblesAlreadyRecruited++;
+                }
+
+                const remainingNobles = Math.max(0, noblesAmount - noblesAlreadyRecruited);
+
                 let coinsNeeded = twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
                 coinsNeeded = Math.max(0, coinsNeeded - hisCoins);
 
@@ -142,7 +150,7 @@ $.getScript(
                     woodNeededNobles,
                     stoneNeededNobles,
                     ironNeededNobles,
-                } = calculateResourcesForNobles(noblesAmount, nobleCost);
+                } = calculateResourcesForNobles(remainingNobles, nobleCost);
 
                 const totalWood = woodNeededCoins + woodNeededNobles;
                 const totalStone = stoneNeededCoins + stoneNeededNobles;
