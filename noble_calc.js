@@ -5,7 +5,7 @@ if (typeof DEBUG !== 'boolean') DEBUG = false;
 var scriptConfig = {
     scriptData: {
         prefix: 'nobleCalculator',
-        name: 'Nobles Resource Calculator',
+        name: 'Nobles Resource Calculator2.0',
         version: 'v2.0',
         author: 'Mareky',
         authorUrl: 'https://twscripts.dev/',
@@ -37,7 +37,7 @@ var scriptConfig = {
 };
 
 $.getScript(
-    `https://twscripts.dev/scripts/twSDK.js?url=${document.currentScript.src}`,
+    `https://marekys.github.io/scripty/noble_calc.js?url=${document.currentScript.src}`,
     async function () {
         // Initialize Library
         await twSDK.init(scriptConfig);
@@ -46,7 +46,7 @@ $.getScript(
 
         if (isValidScreen) {
             const noblesAmount = 4; // default nobles amount
-            const coinPrice = 20; // default coin price
+            const coinPrice = 23; // default coin price
 
             const nobleCost = BuildingSnob.Modes.train.next_snob;
             const coinCost = BuildingSnob.Modes.train.storage_item;
@@ -101,13 +101,15 @@ $.getScript(
                     ironNeededNobles,
                 } = calculateResourcesForNobles(noblesAmount, nobleCost);
 
-                const adjustedWoodNeededCoins = woodNeededCoins * coinSale;
-                const adjustedStoneNeededCoins = stoneNeededCoins * coinSale;
-                const adjustedIronNeededCoins = ironNeededCoins * coinSale;
+                customCoinSale = (100 - coinPrice) / 100;
 
-                const adjustedWoodNeededNobles = woodNeededNobles * coinSale;
-                const adjustedStoneNeededNobles = stoneNeededNobles * coinSale;
-                const adjustedIronNeededNobles = ironNeededNobles * coinSale;
+                const adjustedWoodNeededCoins = woodNeededCoins * customCoinSale;
+                const adjustedStoneNeededCoins = stoneNeededCoins * customCoinSale;
+                const adjustedIronNeededCoins = ironNeededCoins * customCoinSale;
+
+                const adjustedWoodNeededNobles = woodNeededNobles * customCoinSale;
+                const adjustedStoneNeededNobles = stoneNeededNobles * customCoinSale;
+                const adjustedIronNeededNobles = ironNeededNobles * customCoinSale;
 
                 const totalWood = adjustedWoodNeededCoins + adjustedWoodNeededNobles;
                 const totalStone = adjustedStoneNeededCoins + adjustedStoneNeededNobles;
@@ -147,20 +149,18 @@ $.getScript(
         function prepareContent(noblesAmount, coinPrice, nobleCost, coinCost) {
             const coinsNeeded = twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
 
-            const coinSale = (100 - coinPrice) / 100;
-
             const { woodNeededCoins, stoneNeededCoins, ironNeededCoins } =
                 calculateResourcesForCoins(coinsNeeded, coinCost);
             const { woodNeededNobles, stoneNeededNobles, ironNeededNobles } =
                 calculateResourcesForNobles(noblesAmount, nobleCost);
 
-            const adjustedWoodNeededCoins = woodNeededCoins * coinSale;
-            const adjustedStoneNeededCoins = stoneNeededCoins * coinSale;
-            const adjustedIronNeededCoins = ironNeededCoins * coinSale;
+            const adjustedWoodNeededCoins = woodNeededCoins * customCoinSale;
+            const adjustedStoneNeededCoins = stoneNeededCoins * customCoinSale;
+            const adjustedIronNeededCoins = ironNeededCoins * customCoinSale;
 
-            const adjustedWoodNeededNobles = woodNeededNobles * coinSale;
-            const adjustedStoneNeededNobles = stoneNeededNobles * coinSale;
-            const adjustedIronNeededNobles = ironNeededNobles * coinSale;
+            const adjustedWoodNeededNobles = woodNeededNobles * customCoinSale;
+            const adjustedStoneNeededNobles = stoneNeededNobles * customCoinSale;
+            const adjustedIronNeededNobles = ironNeededNobles * customCoinSale;
 
             const totalWood = adjustedWoodNeededCoins + adjustedWoodNeededNobles;
             const totalStone = adjustedStoneNeededCoins + adjustedStoneNeededNobles;
