@@ -23,8 +23,8 @@ var scriptConfig = {
         prefix: 'nobleCalculator',
         name: 'Nobles Resource Calculator',
         version: 'v1.0',
-        author: 'RedAlert',
-        authorUrl: 'https://twscripts.dev/',
+        author: 'Mareky',
+        authorUrl: 'https://github.com/Marekys/',
         helpLink:
             'https://forum.tribalwars.net/index.php?threads/nobles-resources-calculator.287583/',
     },
@@ -37,10 +37,10 @@ var scriptConfig = {
                 'Kolko chces vyrazit slachticov celkovo?',
             'Calculate Resources': 'Vypocitaj Suroviny',
             Coins: 'Mince',
-            Nobles: 'Slachtici',
+            Nobles: 'Šľachticov',
             Wood: 'Drevo',
             Clay: 'Hlina',
-            Iron: 'Zelezo',
+            Iron: 'Železo',
             TOTAL: 'TOTAL',
             'Invalid nobles amount!': 'Nevalidny pocet slachticov!',
             'Enter custom coin % sale value (0-48)':
@@ -128,9 +128,9 @@ $.getScript(
                 }
 
                 const adjustedCoinCost = {
-                    wood: coinCost.wood * (1 - customCoinSale / 100),
-                    stone: coinCost.stone * (1 - customCoinSale / 100),
-                    iron: coinCost.iron * (1 - customCoinSale / 100)
+                    wood: Math.round(coinCost.wood * (1 - customCoinSale / 100)),
+                    stone: Math.round(coinCost.stone * (1 - customCoinSale / 100)),
+                    iron: Math.round(coinCost.iron * (1 - customCoinSale / 100))
                 };
 
                         // Calculate the number of nobles the player can recruit with their existing coins
