@@ -100,6 +100,7 @@ $.getScript(
 
                 const noblesAmount = parseInt(jQuery('#raNoblesAmount').val());
                 const customCoinSale = parseFloat(jQuery('#raCustomCoinSale').val());
+                const hisCoins = parseInt(jQuery('#raHisCoins').val()) || 0;
 
                 if (isNaN(noblesAmount) || noblesAmount <= 0) {
                     UI.ErrorMessage(twSDK.tt('Invalid nobles amount!'));
@@ -117,7 +118,8 @@ $.getScript(
                     iron: coinCost.iron * (1 - customCoinSale / 100)
                 };
 
-                const coinsNeeded = twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
+                let coinsNeeded = twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
+                coinsNeeded = Math.max(0, coinsNeeded - hisCoins);
 
                 const { woodNeededCoins, stoneNeededCoins, ironNeededCoins } =
                     calculateResourcesForCoins(coinsNeeded, adjustedCoinCost);
@@ -146,10 +148,9 @@ $.getScript(
             });
         }
 
-        // Helper: Prepare content
+        // Update the prepareContent function to include the new input field
         function prepareContent(noblesAmount, nobleCost, coinCost) {
-            const coinsNeeded =
-                twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
+            const coinsNeeded = twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
 
             const { woodNeededCoins, stoneNeededCoins, ironNeededCoins } =
                 calculateResourcesForCoins(coinsNeeded, coinCost);
@@ -173,9 +174,15 @@ $.getScript(
                         </div>
                         <div class="ra-mb15">
                             <label for="raCustomCoinSale">
-                                ${twSDK.tt('Enter custom coin sale value (10-25)')}
+                                ${twSDK.tt('Enter custom coin sale value (0-25)')}
                             </label>
-                            <input class="ra-input" id="raCustomCoinSale" type="number" value="10" min="10" max="25">
+                            <input class="ra-input" id="raCustomCoinSale" type="number" value="0" min="0" max="25">
+                        </div>
+                        <div class="ra-mb15">
+                            <label for="raHisCoins">
+                                ${twSDK.tt('Enter the number of coins you already have')}
+                            </label>
+                            <input class="ra-input" id="raHisCoins" type="number" value="0" min="0">
                         </div>
                         <a class="btn" href="javascript:void(0)" id="raCalculateResourcesBtn">
                             ${twSDK.tt('Calculate Resources')}
