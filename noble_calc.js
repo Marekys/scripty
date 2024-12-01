@@ -101,7 +101,7 @@ $.getScript(
                     ironNeededNobles,
                 } = calculateResourcesForNobles(noblesAmount, nobleCost);
 
-                customCoinSale = 1;
+                const customCoinSale = 1;
 
                 const adjustedWoodNeededCoins = woodNeededCoins * customCoinSale;
                 const adjustedStoneNeededCoins = stoneNeededCoins * customCoinSale;
