@@ -43,8 +43,10 @@ var scriptConfig = {
             Iron: 'Zelezo',
             TOTAL: 'TOTAL',
             'Invalid nobles amount!': 'Nevalidny pocet slachticov!',
-            'Enter custom coin sale value (10-25)':
-                'Zadaj vlastnu hodnotu predaja minci (10-25)',
+            'Enter custom coin sale value (0-25)':
+                'Zadaj vlastnu hodnotu predaja minci (0-25)',
+            'Custom coin sale value must be between 0 and 25':
+                'Hodnota zlavnenej mince musi byt medzi 0 a 25',
         },
     },
     allowedMarkets: [],
@@ -104,8 +106,8 @@ $.getScript(
                     return;
                 }
 
-                if (customCoinSale < 10 || customCoinSale > 25) {
-                    alert('Custom coin sale value must be between 10 and 25');
+                if (customCoinSale < 0 || customCoinSale > 25) {
+                    UI.ErrorMessage(twSDK.tt('Custom coin sale value must be between 0 and 25'));
                     return;
                 }
 
@@ -179,10 +181,16 @@ $.getScript(
                             </label>
                             <input class="ra-input" id="raNoblesAmount" type="text" value="${noblesAmount}">
                         </div>
+                        <div class="ra-mb15">
+                            <label for="raCustomCoinSale">
+                                ${twSDK.tt('Enter custom coin sale value (10-25)')}
+                            </label>
+                            <input class="ra-input" id="raCustomCoinSale" type="number" value="10" min="10" max="25">
+                        </div>
                         <a class="btn" href="javascript:void(0)" id="raCalculateResourcesBtn">
                             ${twSDK.tt('Calculate Resources')}
                         </a>
-                    </div>	
+                    </div>
                     <div>
                         <table class="ra-table ra-table-v2" width="100%">
                             <thead>
@@ -249,12 +257,6 @@ $.getScript(
                             </tbody>
                         </table>
                     </div>
-                </div>
-                <div class="ra-mb15">
-                    <label for="raCustomCoinSale">
-                        ${twSDK.tt('Enter custom coin sale value (10-25)')}
-                    </label>
-                    <input class="ra-input" id="raCustomCoinSale" type="number" value="10" min="10" max="25">
                 </div>
             `;
         }
