@@ -34,7 +34,7 @@ var scriptConfig = {
             Help: 'Help',
             'Redirecting...': 'Redirecting...',
             'Enter the nobleman amount for the which you want to calculate resources':
-                'Zadaj pocet slachticov pre ktory chces vypocitat pocet surovin',
+                'Kolko chces vyrazit slachticov celkovo?',
             'Calculate Resources': 'Vypocitaj Suroviny',
             Coins: 'Mince',
             Nobles: 'Slachtici',
@@ -109,14 +109,6 @@ $.getScript(
                 const useCustomCoinSale = jQuery('#raUseCustomCoinSale').is(':checked');
                 const decretOn = jQuery('#raDecretOn').is(':checked');
 
-                if (!useCustomCoinSale) {
-                    customCoinSale = 0;
-                }
-
-                if (decretOn) {
-                    customCoinSale += 10;
-                }
-
                 if (isNaN(noblesAmount) || noblesAmount <= 0) {
                     UI.ErrorMessage(twSDK.tt('Invalid nobles amount!'));
                     return;
@@ -125,6 +117,14 @@ $.getScript(
                 if (isNaN(customCoinSale) || customCoinSale < 0 || customCoinSale > 48) {
                     UI.ErrorMessage(twSDK.tt('Custom coin sale value must be between 0 and 48'));
                     return;
+                }
+
+                if (!useCustomCoinSale) {
+                    customCoinSale = 0;
+                }
+
+                if (decretOn) {
+                    customCoinSale += 10;
                 }
 
                 const adjustedCoinCost = {
