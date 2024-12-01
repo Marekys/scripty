@@ -43,6 +43,8 @@ var scriptConfig = {
             Iron: 'Zelezo',
             TOTAL: 'TOTAL',
             'Invalid nobles amount!': 'Nevalidny pocet slachticov!',
+            'Enter custom coin sale value (10-25)':
+                'Zadaj vlastnu hodnotu predaja minci (10-25)',
         },
     },
     allowedMarkets: [],
@@ -111,7 +113,7 @@ $.getScript(
                     twSDK.calculateCoinsNeededForNthNoble(noblesAmount);
 
                 const { woodNeededCoins, stoneNeededCoins, ironNeededCoins } =
-                    calculateResourcesForCoins(coinsNeeded, coinCost);
+                    calculateResourcesForCoins(coinsNeeded, coinCost * (1 - customCoinSale / 100));
                 const {
                     woodNeededNobles,
                     stoneNeededNobles,
